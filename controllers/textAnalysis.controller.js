@@ -1,9 +1,8 @@
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const TextAnalysis = require("../models/textAnalysis.model");
+const Summarizer = require("node-summarizer").Summarizer;
 
-// Define your TextRazor client (replace with actual initialization)
+// TextRazor client
 const TextRazor = require("textrazor");
 const textRazor = new TextRazor(process.env.TEXTRAZOR_API_KEY);
 
@@ -13,7 +12,7 @@ const analyzeText = async (text) => {
   try {
     const response = await textRazor.exec(text, options);
     return {
-      summary: "Summary", // Generate a summary here
+      summary: "Summary",
       insights: {
         entities: response.response.entities || [],
         topics: response.response.topics || [],
@@ -27,7 +26,7 @@ const analyzeText = async (text) => {
   }
 };
 
-const createAnalysis = async (req, res) => {
+exports.createAnalysis = async (req, res) => {
   try {
     const { text } = req.body;
 
@@ -40,13 +39,9 @@ const createAnalysis = async (req, res) => {
     const analysis = new TextAnalysis({ text, summary, insights });
     await analysis.save();
 
-    res.json({ summary, insights });
+    res.json({ text, summary, insights });
   } catch (error) {
     console.error("Error processing text:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-};
-
-module.exports = {
-  createAnalysis,
 };
