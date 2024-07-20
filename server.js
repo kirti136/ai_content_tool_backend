@@ -19,7 +19,7 @@ app.use("/api/user", routes.userRouter);
 app.use("/api/upload", routes.textAnalysisRouter);
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "AI Content" });
+  res.status(200).json({ message: "AI Content Summarizer" });
 });
 
 app.listen(PORT, () => {
